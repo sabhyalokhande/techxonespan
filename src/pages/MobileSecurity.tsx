@@ -76,7 +76,7 @@ const MobileSecurity = () => {
             Next Generation Mobile App Security Platform
           </h1>
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
-            Cloud-augmented security. Three layers of threat protection. A single integrated platform. The future of mobile app security — powered by Build38, now part of OneSpan.
+            Cloud-augmented security. Three layers of threat protection. A single integrated platform. The future of mobile app security.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button
@@ -137,7 +137,7 @@ const MobileSecurity = () => {
 
       {/* Benefits */}
       <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-        <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">Why Build38</p>
+        <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">Why Choose Us</p>
         <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.1] tracking-tight text-foreground">
           Secure your app. Boost your business.
         </h2>
