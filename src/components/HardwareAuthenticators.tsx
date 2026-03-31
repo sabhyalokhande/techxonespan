@@ -55,6 +55,28 @@ const ProductSection = ({ badge, title, description, bullets, image, imageAlt, r
 const HardwareAuthenticators = () => {
   return (
     <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+      {/* Video Section */}
+      <div className="mb-24 text-center">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">See It In Action</p>
+        <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.1] tracking-tight text-foreground">
+          Introducing Digipass® FIDO2 Security Keys
+        </h2>
+        <p className="mx-auto mt-4 max-w-lg text-[15px] text-muted-foreground">
+          See how phishing-resistant, passwordless security protects your teams anywhere.
+        </p>
+        <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-border shadow-lg">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+            <iframe
+              src="https://player.vimeo.com/video/1051641614?h=0&title=0&byline=0&portrait=0"
+              className="absolute inset-0 h-full w-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              title="Introducing Digipass FIDO2 Security Keys"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Section 1 — FIDO2 Keys */}
       <ProductSection
         badge="Passwordless Authentication"
