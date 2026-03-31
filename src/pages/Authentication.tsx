@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import HardwareAuthenticators from "@/components/HardwareAuthenticators";
+import SEOHead from "@/components/SEOHead";
 
 type Tab = "hardware" | "software";
 type SoftwareTab = "platform" | "mobile";
@@ -17,6 +18,10 @@ const Authentication = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Authentication Solutions for Banks | FIDO2, MFA & OTP – TechFlex × OneSpan"
+        description="Enterprise authentication for banking — FIDO2 hardware keys, mobile soft tokens, push OTP, biometric MFA & Cronto visual transaction signing. PCI-DSS & RBI compliant."
+      />
       {/* Header */}
       <section className="bg-[hsl(213,37%,8%)]">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
