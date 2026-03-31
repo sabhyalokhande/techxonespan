@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ShieldCheck, Key, Smartphone, Monitor, Fingerprint, ArrowRight,
-  Check, Cpu, Wifi, ScanFace, KeyRound, LockKeyhole, Layers
+  ShieldCheck, Smartphone, ArrowRight,
+  Check, ScanFace, KeyRound, LockKeyhole, Layers
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
+import HardwareAuthenticators from "@/components/HardwareAuthenticators";
 
 type Tab = "hardware" | "software";
 type SoftwareTab = "platform" | "mobile";
