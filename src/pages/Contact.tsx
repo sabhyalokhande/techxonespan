@@ -67,7 +67,7 @@ const Contact = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone" className="text-[13px]">Phone</Label>
-                  <Input id="phone" type="tel" placeholder="+91 98765 43210" className="h-11" />
+                  <Input id="phone" type="tel" placeholder="+91-22-41207788" className="h-11" />
                 </div>
               </div>
 
@@ -113,7 +113,7 @@ const Contact = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} />
-                  +91 (0) 123 456 7890
+                  +91-22-41207788
                 </li>
                 <li className="flex items-start gap-3">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} />
