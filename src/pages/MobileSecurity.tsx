@@ -69,6 +69,10 @@ const industries = [
 const MobileSecurity = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Mobile Banking App Security | App Shielding & RASP – TechFlex × OneSpan"
+        description="Protect mobile banking apps with RASP, code obfuscation, anti-tampering & AI-driven threat intelligence. Secure iOS & Android apps against fraud and reverse engineering."
+      />
       {/* Header */}
       <section className="bg-[hsl(213,37%,8%)]">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">

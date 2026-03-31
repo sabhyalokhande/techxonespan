@@ -25,6 +25,10 @@ const Contact = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Request a Demo | Banking Security Solutions – TechFlex × OneSpan"
+        description="Schedule a free demo of our banking authentication and mobile security solutions. Contact our team for MFA, app shielding, and fraud prevention tailored to your institution."
+      />
       {/* Header */}
       <section className="bg-[hsl(213,37%,8%)]">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
