@@ -67,7 +67,7 @@ const Contact = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone" className="text-[13px]">Phone</Label>
-                  <Input id="phone" type="tel" placeholder="+91 98765 43210" className="h-11" />
+                  <Input id="phone" type="tel" placeholder="+91-22-41207788" className="h-11" />
                 </div>
               </div>
 
