@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import HardwareAuthenticators from "@/components/HardwareAuthenticators";
+import SEOHead from "@/components/SEOHead";
 
 type Tab = "hardware" | "software";
 type SoftwareTab = "platform" | "mobile";
