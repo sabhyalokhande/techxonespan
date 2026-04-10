@@ -16,6 +16,14 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+
+    // Fire Google Ads conversion event
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-18073309737/vk9uCKXu5ZgcEKmkg6pD",
+      });
+    }
+
     setTimeout(() => {
       setSubmitting(false);
       toast({ title: "Request submitted", description: "Our team will reach out within 24 hours." });
