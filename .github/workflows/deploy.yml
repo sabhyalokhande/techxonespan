@@ -1,0 +1,46 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (includes prerender/sitemap via Vite plugin)
+        run: npm run build
+
+      - name: Copy PHP backend into build output
+        # contact.php / PHPMailer / .htaccess aren't part of the Vite build —
+        # they live at the repo root. Fold them into dist/ so one FTP sync
+        # covers the whole site. config.local.php stays server-only (never
+        # in this repo) and is never touched here.
+        run: |
+          cp contact.php dist/contact.php
+          cp .htaccess dist/.htaccess
+          cp -r PHPMailer dist/PHPMailer
+
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: /public_html/
+          exclude: |
+            **/config.local.php
+            **/rate_limit.json
+            **/contact_log.txt
