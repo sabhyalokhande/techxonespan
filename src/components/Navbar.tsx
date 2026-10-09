@@ -8,6 +8,8 @@ const navLinks = [
   { label: "Home", to: "/" },
   { label: "Authentication", to: "/authentication" },
   { label: "Mobile Security", to: "/mobile-security" },
+  { label: "Resources", to: "/resources" },
+  { label: "Contact", to: "/contact" },
 ];
 
 const Navbar = () => {
@@ -15,7 +17,7 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
+    <nav aria-label="Main" className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-6 lg:px-8">
         <Logo />
 
@@ -53,6 +55,7 @@ const Navbar = () => {
           className="inline-flex items-center justify-center rounded-md p-2 text-foreground md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>

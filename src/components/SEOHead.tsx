@@ -1,28 +1,26 @@
 import { useEffect } from "react";
+import { buildHeadTags, notFoundSeo, pages, type PageSeo } from "@/seo/config";
 
 interface SEOHeadProps {
-  title: string;
-  description: string;
+  /** Route path registered in src/seo/config.ts. Omit for the 404 page. */
+  path?: string;
 }
 
-const SEOHead = ({ title, description }: SEOHeadProps) => {
+// The prerendered HTML already contains these tags; this keeps them correct
+// during client-side navigation.
+const SEOHead = ({ path }: SEOHeadProps) => {
   useEffect(() => {
-    document.title = title;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute("content", description);
-    
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute("content", title);
-    
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) ogDesc.setAttribute("content", description);
-    
-    const twTitle = document.querySelector('meta[name="twitter:title"]');
-    if (twTitle) twTitle.setAttribute("content", title);
-    
-    const twDesc = document.querySelector('meta[name="twitter:description"]');
-    if (twDesc) twDesc.setAttribute("content", description);
-  }, [title, description]);
+    const seo: PageSeo = (path && pages[path]) || notFoundSeo;
+    document.title = seo.title;
+    document.head.querySelectorAll("[data-seo]").forEach((el) => el.remove());
+    for (const { tag, attrs, content } of buildHeadTags(seo)) {
+      const el = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+      el.setAttribute("data-seo", "");
+      if (content) el.textContent = content;
+      document.head.appendChild(el);
+    }
+  }, [path]);
 
   return null;
 };

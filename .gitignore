@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Server runtime files (live only, never committed)
+rate_limit.json
+contact_log.txt
+_to_delete/
+dist.zip

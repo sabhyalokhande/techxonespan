@@ -5,22 +5,14 @@ import {
   Building2, CreditCard, AlertTriangle, FileCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import FaqSection from "@/components/FaqSection";
 
 const Index = () => {
   return (
     <Layout>
-      <SEOHead
-        title="Banking Security Solutions | MFA & Mobile Authentication – TechFlex × OneSpan"
-        description="Enterprise banking security solutions — multi-factor authentication, mobile app shielding, fraud prevention & RBI compliance. Trusted by 10,000+ institutions across 60+ countries."
-      />
+      <SEOHead path="/" />
 
       {/* Hero — Conversion-focused with high-intent keywords */}
       <section className="relative overflow-hidden bg-[hsl(213,37%,8%)]">
@@ -100,7 +92,7 @@ const Index = () => {
               Banking security encompasses the technologies, processes, and protocols that protect financial institutions from cyber threats, unauthorized access, and digital fraud. As banks accelerate their digital transformation — from mobile banking apps to online payment gateways — the attack surface for cybercriminals grows exponentially.
             </p>
             <p className="mt-4 text-[15px] leading-[1.8] text-muted-foreground">
-              Modern banking security requires a <strong className="text-foreground">multi-layered approach</strong>: strong customer authentication (SCA) to verify user identity, runtime application self-protection (RASP) to shield mobile banking apps, and continuous threat intelligence to detect and respond to emerging attack vectors in real time.
+              Modern banking security requires a <strong className="text-foreground">multi-layered approach</strong>: <Link to="/authentication" className="text-primary underline-offset-4 hover:underline">strong customer authentication (SCA)</Link> to verify user identity, <Link to="/mobile-security" className="text-primary underline-offset-4 hover:underline">runtime application self-protection (RASP)</Link> to shield mobile banking apps, and continuous threat intelligence to detect and respond to emerging attack vectors in real time.
             </p>
           </div>
           <div className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
@@ -317,64 +309,7 @@ const Index = () => {
       </section>
 
       {/* FAQ Section — SEO Rich Snippet Target */}
-      <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-        <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">FAQ</p>
-        <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-foreground">
-          Frequently Asked Questions
-        </h2>
-        <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-          Common questions about banking security, authentication, and our solutions.
-        </p>
-
-        <div className="mt-10 max-w-3xl">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="mfa">
-              <AccordionTrigger className="text-left text-[15px] font-medium">
-                What is multi-factor authentication (MFA) for banking?
-              </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
-                Multi-factor authentication (MFA) for banking requires users to verify their identity using two or more factors — something they know (password), something they have (hardware token or phone), and something they are (biometrics). This significantly reduces unauthorized access and fraud in digital banking. Our FIDO2-certified hardware keys and mobile soft tokens provide the highest assurance levels required by financial regulators.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="shielding">
-              <AccordionTrigger className="text-left text-[15px] font-medium">
-                How does mobile app shielding protect banking applications?
-              </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
-                Mobile app shielding embeds security directly into the banking app with runtime application self-protection (RASP), code obfuscation, anti-tampering, and root/jailbreak detection. This protects against reverse engineering, credential theft, and malware attacks — even on compromised devices. Our platform provides three integration levels: No Code for instant protection, Step Code for rapid deployment, and Master Code for full customization.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="compliance">
-              <AccordionTrigger className="text-left text-[15px] font-medium">
-                What compliance standards does the solution support?
-              </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
-                Our solutions comply with RBI cybersecurity guidelines, PSD2 Strong Customer Authentication (SCA), PCI-DSS, GDPR, eIDAS 2, PCI-MPoC, FFIEC, and BSA/AML regulations — ensuring banks meet all regulatory requirements for digital transactions across India and internationally.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="fido2">
-              <AccordionTrigger className="text-left text-[15px] font-medium">
-                What is FIDO2 authentication and why is it important for banks?
-              </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
-                FIDO2 is an open authentication standard that enables passwordless login using hardware security keys or device biometrics. For banks, it eliminates phishing risks, reduces password-related fraud, and provides a seamless customer experience while meeting the highest security standards. Our DIGIPASS FX1 BIO key combines FIDO2 with on-device fingerprint verification for maximum security.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="fraud">
-              <AccordionTrigger className="text-left text-[15px] font-medium">
-                How can banks prevent mobile banking fraud?
-              </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
-                Banks can prevent mobile fraud through a layered approach: multi-factor authentication for login and transactions, mobile app shielding with RASP protection, real-time threat intelligence monitoring, transaction signing with visual cryptograms, and compliance with regulatory frameworks like RBI guidelines. Our integrated platform combines all these layers into a single solution.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </section>
+      <FaqSection path="/" intro="Common questions about banking security, authentication, and our solutions." />
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">

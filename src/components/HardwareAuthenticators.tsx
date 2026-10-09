@@ -4,11 +4,10 @@ import {
   LockKeyhole, ArrowRight, Hash, PenLine, ScanLine
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import fxOverview from "@/assets/fx-overview-header.png";
-import fx1Bio from "@/assets/fx1-bio.png";
-import fx7 from "@/assets/fx7.png";
-import stopSocial from "@/assets/stop-social-engineering.png";
-import fx2 from "@/assets/fx2.png";
+import fx1Bio from "@/assets/fx1-bio.webp";
+import fx7 from "@/assets/fx7.webp";
+import stopSocial from "@/assets/stop-social-engineering.webp";
+import fx2 from "@/assets/fx2.webp";
 
 const features = [
   { icon: Fingerprint, title: "Biometric Authentication", desc: "Built-in fingerprint sensor for instant, passwordless identity verification." },
@@ -26,10 +25,12 @@ interface ProductSectionProps {
   bullets: string[];
   image: string;
   imageAlt: string;
+  imageWidth: number;
+  imageHeight: number;
   reverse?: boolean;
 }
 
-const ProductSection = ({ badge, title, description, bullets, image, imageAlt, reverse }: ProductSectionProps) => (
+const ProductSection = ({ badge, title, description, bullets, image, imageAlt, imageWidth, imageHeight, reverse }: ProductSectionProps) => (
   <div className={`grid items-center gap-12 lg:grid-cols-2 ${reverse ? "direction-rtl" : ""}`}>
     <div className={reverse ? "order-2 lg:order-1" : ""}>
       <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">{badge}</p>
@@ -47,7 +48,15 @@ const ProductSection = ({ badge, title, description, bullets, image, imageAlt, r
       </div>
     </div>
     <div className={`flex justify-center ${reverse ? "order-1 lg:order-2" : ""}`}>
-      <img src={image} alt={imageAlt} className="max-h-[360px] w-auto object-contain drop-shadow-lg" />
+      <img
+        src={image}
+        alt={imageAlt}
+        width={imageWidth}
+        height={imageHeight}
+        loading="lazy"
+        decoding="async"
+        className="h-auto max-h-[360px] w-auto max-w-full object-contain drop-shadow-lg"
+      />
     </div>
   </div>
 );
@@ -71,6 +80,7 @@ const HardwareAuthenticators = () => {
               className="absolute inset-0 h-full w-full"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
+              loading="lazy"
               title="Introducing Digipass FIDO2 Security Keys"
             />
           </div>
@@ -90,7 +100,9 @@ const HardwareAuthenticators = () => {
           "Durable, tamper-resistant hardware with 5+ year lifespan",
         ]}
         image={fx1Bio}
-        imageAlt="Digipass FX1 Bio FIDO2 security key with fingerprint sensor"
+        imageAlt="DIGIPASS FX1 BIO FIDO2 hardware security key with fingerprint sensor"
+        imageWidth={700}
+        imageHeight={500}
       />
 
       {/* Section 2 — One-Button OTP */}
@@ -107,7 +119,9 @@ const HardwareAuthenticators = () => {
           "Compatible with any OTP-based authentication backend",
         ]}
         image={fx7}
-        imageAlt="Digipass FX7 one-button OTP authenticator"
+        imageAlt="DIGIPASS FX7 one-button OTP hardware token for two-factor authentication"
+        imageWidth={700}
+        imageHeight={500}
         reverse
       />
 
@@ -125,7 +139,9 @@ const HardwareAuthenticators = () => {
           "Meets PSD2 Strong Customer Authentication requirements",
         ]}
         image={stopSocial}
-        imageAlt="Stop social engineering with FIDO2 security keys"
+        imageAlt="Hardware token transaction signing stops social engineering and man-in-the-middle attacks"
+        imageWidth={972}
+        imageHeight={600}
       />
 
       {/* Section 4 — Cronto / Visual Cryptogram */}
@@ -142,7 +158,9 @@ const HardwareAuthenticators = () => {
           "Combines maximum security with an intuitive user experience",
         ]}
         image={fx2}
-        imageAlt="Digipass FX2 authenticator for transaction signing"
+        imageAlt="DIGIPASS FX2 visual cryptogram (Cronto) transaction-signing authenticator"
+        imageWidth={700}
+        imageHeight={500}
         reverse
       />
 

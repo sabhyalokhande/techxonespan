@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   ShieldCheck, Smartphone, ArrowRight,
   Check, ScanFace, KeyRound, LockKeyhole, Layers
@@ -15,13 +15,21 @@ type SoftwareTab = "platform" | "mobile";
 const Authentication = () => {
   const [activeTab, setActiveTab] = useState<Tab>("hardware");
   const [softwareTab, setSoftwareTab] = useState<SoftwareTab>("platform");
+  const { hash } = useLocation();
+
+  // Deep links: #hardware, #software, #platform, #mobile
+  useEffect(() => {
+    const id = hash.slice(1);
+    if (id === "hardware" || id === "software") setActiveTab(id);
+    if (id === "platform" || id === "mobile") {
+      setActiveTab("software");
+      setSoftwareTab(id);
+    }
+  }, [hash]);
 
   return (
     <Layout>
-      <SEOHead
-        title="Authentication Solutions for Banks | FIDO2, MFA & OTP – TechFlex × OneSpan"
-        description="Enterprise authentication for banking — FIDO2 hardware keys, mobile soft tokens, push OTP, biometric MFA & Cronto visual transaction signing. PCI-DSS & RBI compliant."
-      />
+      <SEOHead path="/authentication" />
       {/* Header */}
       <section className="bg-[hsl(213,37%,8%)]">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
@@ -29,23 +37,27 @@ const Authentication = () => {
           <h1
             className="mt-4 max-w-2xl text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.08] tracking-tight text-white"
           >
-            Authentication Solutions
+            Authentication Solutions for Banks
           </h1>
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
-            From FIDO2 hardware security keys to mobile soft tokens — a complete multi-factor authentication portfolio for enterprise security.
+            From FIDO2 hardware security keys and OTP tokens to mobile soft tokens and Cronto transaction signing — a complete multi-factor authentication portfolio for banks and financial institutions.
           </p>
         </div>
       </section>
 
       {/* Tabs */}
       <div className="border-b border-border bg-background">
-        <div className="mx-auto flex max-w-7xl px-6 lg:px-8">
+        <div role="tablist" aria-label="Authenticator type" className="mx-auto flex max-w-7xl px-6 lg:px-8">
           {([
             { key: "hardware" as Tab, label: "Hardware Authenticators", icon: KeyRound },
             { key: "software" as Tab, label: "Software Authenticators", icon: Smartphone },
           ]).map(({ key, label, icon: Icon }) => (
             <button
               key={key}
+              id={`tab-${key}`}
+              role="tab"
+              aria-selected={activeTab === key}
+              aria-controls={key}
               onClick={() => setActiveTab(key)}
               className={`flex items-center gap-2.5 border-b-2 px-6 py-4 text-[13px] font-semibold uppercase tracking-wider transition-colors ${
                 activeTab === key
@@ -60,19 +72,26 @@ const Authentication = () => {
         </div>
       </div>
 
-      {activeTab === "hardware" && <HardwareAuthenticators />}
+      {/* Inactive panels stay in the DOM (hidden) so their content is crawlable. */}
+      <div id="hardware" role="tabpanel" aria-labelledby="tab-hardware" hidden={activeTab !== "hardware"} className="scroll-mt-24">
+        <HardwareAuthenticators />
+      </div>
 
       {/* Software */}
-      {activeTab === "software" && (
+      <div id="software" role="tabpanel" aria-labelledby="tab-software" hidden={activeTab !== "software"} className="scroll-mt-24">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
           {/* Sub-tabs */}
-          <div className="mb-12 inline-flex rounded-lg border border-border bg-muted/50 p-1">
+          <div role="tablist" aria-label="Software authenticator type" className="mb-12 inline-flex rounded-lg border border-border bg-muted/50 p-1">
             {([
               { key: "platform" as SoftwareTab, label: "Platform Authenticators" },
               { key: "mobile" as SoftwareTab, label: "Mobile Authenticators" },
             ]).map(({ key, label }) => (
               <button
                 key={key}
+                id={`tab-${key}`}
+                role="tab"
+                aria-selected={softwareTab === key}
+                aria-controls={key}
                 onClick={() => setSoftwareTab(key)}
                 className={`rounded-md px-5 py-2.5 text-[13px] font-medium transition-all active:scale-[0.97] ${
                   softwareTab === key
@@ -85,7 +104,7 @@ const Authentication = () => {
             ))}
           </div>
 
-          {softwareTab === "platform" && (
+          <div id="platform" role="tabpanel" aria-labelledby="tab-platform" hidden={softwareTab !== "platform"}>
             <div className="grid gap-16 lg:grid-cols-5">
               <div className="lg:col-span-3">
                 <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.1] tracking-tight text-foreground">
@@ -111,7 +130,7 @@ const Authentication = () => {
                   asChild
                   className="mt-10 rounded-full bg-accent px-7 text-[13px] font-semibold text-white shadow-none hover:bg-accent/90 active:scale-[0.97]"
                 >
-                  <Link to="/contact">Learn More <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                  <Link to="/contact">Request a Demo <ArrowRight className="ml-1 h-4 w-4" /></Link>
                 </Button>
               </div>
               <div className="flex items-start lg:col-span-2">
@@ -126,9 +145,9 @@ const Authentication = () => {
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {softwareTab === "mobile" && (
+          <div id="mobile" role="tabpanel" aria-labelledby="tab-mobile" hidden={softwareTab !== "mobile"}>
             <div className="grid gap-16 lg:grid-cols-5">
               <div className="lg:col-span-3">
                 <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.1] tracking-tight text-foreground">
@@ -136,6 +155,11 @@ const Authentication = () => {
                 </h2>
                 <p className="mt-5 max-w-lg text-[15px] leading-[1.7] text-muted-foreground">
                   Soft token and push notification-based MFA through dedicated mobile apps. OTP, Cronto visual transaction signing, and biometric verification — delivered to user smartphones.
+                </p>
+                <p className="mt-4 max-w-lg text-[15px] leading-[1.7] text-muted-foreground">
+                  Embedding authentication in your own banking app? Pair it with{" "}
+                  <Link to="/mobile-security" className="text-primary underline-offset-4 hover:underline">mobile app security</Link>{" "}
+                  so the app protects itself against tampering and overlay attacks.
                 </p>
                 <div className="mt-8 space-y-3">
                   {[
@@ -155,7 +179,7 @@ const Authentication = () => {
                   asChild
                   className="mt-10 rounded-full bg-accent px-7 text-[13px] font-semibold text-white shadow-none hover:bg-accent/90 active:scale-[0.97]"
                 >
-                  <Link to="/contact">Learn More <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                  <Link to="/contact">Request a Demo <ArrowRight className="ml-1 h-4 w-4" /></Link>
                 </Button>
               </div>
               <div className="flex items-start lg:col-span-2">
@@ -170,9 +194,9 @@ const Authentication = () => {
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
-      )}
+      </div>
     </Layout>
   );
 };
