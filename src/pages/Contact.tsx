@@ -308,7 +308,10 @@ const Contact = () => {
               <ul className="mt-5 space-y-5 text-[14px] text-muted-foreground">
                 <li className="flex items-start gap-3">
                   <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} />
-                  <a href="mailto:sales@techflex.co.in" className="hover:text-foreground">sales@techflex.co.in</a>
+<div className="flex flex-col gap-1">
+                    <a href="mailto:sales@techflex.co.in" className="hover:text-primary transition-colors">sales@techflex.co.in</a>
+                    <a href="mailto:vinays@techflex.co.in" className="hover:text-primary transition-colors">vinays@techflex.co.in</a>
+                  </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} />
