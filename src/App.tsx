@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import Authentication from "./pages/Authentication.tsx";
 import MobileSecurity from "./pages/MobileSecurity.tsx";
 import Contact from "./pages/Contact.tsx";
+import ThankYou from "./pages/ThankYou.tsx";
 import Resources from "./pages/Resources.tsx";
 import Article from "./pages/Article.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -40,6 +41,7 @@ const App = () => (
         <Route path="/authentication" element={<Authentication />} />
         <Route path="/mobile-security" element={<MobileSecurity />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/resources/:slug" element={<Article />} />
         <Route path="*" element={<NotFound />} />

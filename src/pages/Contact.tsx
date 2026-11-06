@@ -125,17 +125,18 @@ const Contact = () => {
         throw new Error(text || `Request failed (${res.status})`);
       }
 
+      // Full page load (not client-side routing) so tags that fire on page
+      // view, like a GTM thank-you trigger, see /thank-you. The timeout covers
+      // gtag.js being blocked, when event_callback would never run.
+      const goToThankYou = () => window.location.assign("/thank-you");
       if (typeof window.gtag === "function") {
+        window.setTimeout(goToThankYou, 1000);
         window.gtag("event", "conversion", {
           send_to: "AW-18073309737/vk9uCKXu5ZgcEKmkg6pD",
+          event_callback: goToThankYou,
         });
-      }
-
-      toast({ title: "Request submitted", description: "Our team will reach out within 24 hours." });
-      setForm(EMPTY_FORM);
-      setHoneypot("");
-      if (window.hcaptcha && widgetIdRef.current !== null) {
-        window.hcaptcha.reset(widgetIdRef.current);
+      } else {
+        goToThankYou();
       }
     } catch (err) {
       toast({

@@ -274,6 +274,13 @@ export const pages: Record<string, PageSeo> = {
       breadcrumb([home, { name: "Request a Demo", path: "/contact" }]),
     ],
   },
+  "/thank-you": {
+    path: "/thank-you",
+    name: "Thank You",
+    title: "Thank You | TechFlex × OneSpan",
+    description: "Your request has been submitted. Our team will reach out within 24 hours.",
+    noindex: true,
+  },
 };
 
 const RESOURCES_DESC =
