@@ -162,7 +162,7 @@ const homeFaqs: Faq[] = [
 ];
 
 const HOME_DESC =
-  "MFA, FIDO2 security keys, mobile app shielding and fraud prevention for banks in India. RBI, PSD2 & PCI-DSS ready. Book a free demo with TechFlex × OneSpan.";
+  "MFA, FIDO2 authentication, mobile app shielding & fraud prevention for banks in India. RBI, PSD2 & PCI-DSS ready. Request a free demo.";
 const AUTH_DESC =
   "DIGIPASS FIDO2 security keys, one-button OTP tokens, Cronto transaction signing and mobile soft tokens for banks. Phishing-resistant MFA, RBI & PSD2 ready.";
 const MOBILE_DESC =
@@ -174,12 +174,12 @@ export const pages: Record<string, PageSeo> = {
   "/": {
     path: "/",
     name: "Home",
-    title: "Banking Security Solutions & MFA for Banks | TechFlex × OneSpan",
+    title: "Banking Security & MFA for Banks in India | TechFlex",
     description: HOME_DESC,
     priority: 1.0,
     changefreq: "monthly",
     faqs: homeFaqs,
-    jsonLd: [webPage("WebPage", "/", "Banking Security Solutions & MFA for Banks", HOME_DESC)],
+    jsonLd: [webPage("WebPage", "/", "Banking Security & MFA for Banks in India | TechFlex", HOME_DESC)],
   },
   "/authentication": {
     path: "/authentication",

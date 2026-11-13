@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import FaqSection from "@/components/FaqSection";
+import HeroLeadForm from "@/components/HeroLeadForm";
 
 const Index = () => {
   return (
@@ -25,57 +26,54 @@ const Index = () => {
         />
         <div className="pointer-events-none absolute -right-40 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-primary/[0.06] blur-[120px]" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-28 sm:py-36 lg:px-8">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">
-            Trusted Banking Security Partner
-          </p>
+        <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8">
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
+            <div>
+              <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">
+                Trusted Banking Security Partner
+              </p>
 
-          <h1
-            className="mt-5 max-w-3xl text-[clamp(2.25rem,5vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-white"
-            style={{ textWrap: "balance" } as React.CSSProperties}
-          >
-            Banking Security Solutions: Multi-Factor Authentication &{"\u00A0"}Fraud Prevention
-          </h1>
+              <h1
+                className="mt-5 max-w-2xl text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-white"
+                style={{ textWrap: "balance" } as React.CSSProperties}
+              >
+                Banking Security Solutions: Multi-Factor Authentication &{"\u00A0"}Fraud Prevention
+              </h1>
 
-          <p
-            className="mt-6 max-w-xl text-base leading-[1.7] text-white/55 sm:text-[17px]"
-            style={{ textWrap: "pretty" } as React.CSSProperties}
-          >
-            Protect your digital banking platform with enterprise-grade <strong className="text-white/75">multi-factor authentication</strong>, <strong className="text-white/75">mobile app shielding</strong>, and <strong className="text-white/75">real-time fraud prevention</strong> — deployed across 60+ countries and trusted by 10,000+ financial institutions worldwide.
-          </p>
+              <p
+                className="mt-6 max-w-xl text-base leading-[1.7] text-white/55 sm:text-[17px]"
+                style={{ textWrap: "pretty" } as React.CSSProperties}
+              >
+                Protect your digital banking platform with enterprise-grade <strong className="text-white/75">multi-factor authentication</strong>, <strong className="text-white/75">mobile app shielding</strong>, and <strong className="text-white/75">real-time fraud prevention</strong> — deployed across 60+ countries and trusted by 10,000+ financial institutions worldwide.
+              </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Button
-              asChild
-              size="lg"
-              className="rounded-full bg-primary px-7 text-[14px] font-semibold text-white shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.97]"
-            >
-              <Link to="/contact">
-                Request a Free Demo <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="ghost"
-              size="lg"
-              className="rounded-full text-[14px] font-medium text-white/70 hover:bg-white/5 hover:text-white active:scale-[0.97]"
-            >
-              <Link to="/authentication">
-                Explore Authentication Solutions <ChevronRight className="ml-0.5 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="lg"
+                  className="rounded-full text-[14px] font-medium text-white/70 hover:bg-white/5 hover:text-white active:scale-[0.97]"
+                >
+                  <Link to="/authentication">
+                    Explore Authentication Solutions <ChevronRight className="ml-0.5 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
 
-          {/* Trust bar */}
-          <div className="mt-16 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/10 pt-8">
-            {["FIDO2 Certified", "PCI-DSS Compliant", "RBI Guideline Ready", "10,000+ Enterprise Clients", "60+ Countries"].map(
-              (item) => (
-                <span key={item} className="flex items-center gap-2 text-[13px] text-white/35">
-                  <Check className="h-3.5 w-3.5 text-primary" />
-                  {item}
-                </span>
-              )
-            )}
+              {/* Trust bar */}
+              <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/10 pt-8">
+                {["FIDO2 Certified", "PCI-DSS Compliant", "RBI Guideline Ready", "10,000+ Enterprise Clients", "60+ Countries"].map(
+                  (item) => (
+                    <span key={item} className="flex items-center gap-2 text-[13px] text-white/35">
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                      {item}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+
+            <HeroLeadForm idSuffix="home" />
           </div>
         </div>
       </section>

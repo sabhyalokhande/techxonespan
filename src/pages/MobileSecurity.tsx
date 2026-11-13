@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import FaqSection from "@/components/FaqSection";
+import HeroLeadForm from "@/components/HeroLeadForm";
 
 const threats = [
   { icon: Code2, title: "Reverse engineering", desc: "Attackers decompile the app to study its logic, find hard-coded secrets and plan targeted attacks." },
@@ -99,22 +100,27 @@ const MobileSecurity = () => {
 
       {/* Header */}
       <section className="bg-[hsl(213,37%,8%)]">
-        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">Solutions · Mobile Security</p>
-          <h1 className="mt-4 max-w-3xl text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.08] tracking-tight text-white">
-            Mobile App Security for Banking Apps
-          </h1>
-          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
-            Protect iOS and Android banking apps from reverse engineering, tampering and overlay attacks. Anti-tampering, active hardening and real-time threat intelligence — three layers of protection in a single integrated platform.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button
-              asChild
-              size="lg"
-              className="rounded-full bg-accent px-8 text-[14px] font-semibold text-white shadow-lg shadow-accent/20 hover:bg-accent/90 active:scale-[0.97]"
-            >
-              <Link to="/contact">Request a Demo <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
-            </Button>
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
+            <div>
+              <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">Solutions · Mobile Security</p>
+              <h1 className="mt-4 max-w-3xl text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.08] tracking-tight text-white">
+                Mobile App Security for Banking Apps
+              </h1>
+              <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
+                Protect iOS and Android banking apps from reverse engineering, tampering and overlay attacks. Anti-tampering, active hardening and real-time threat intelligence — three layers of protection in a single integrated platform.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-white/40">
+                {["RASP App Shielding", "Anti-Tamper & Obfuscation", "Zero Code to Full SDK"].map((item) => (
+                  <span key={item} className="flex items-center gap-1.5">
+                    <Check className="h-4 w-4 text-primary" />
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <HeroLeadForm idSuffix="mobile" />
           </div>
         </div>
       </section>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import HardwareAuthenticators from "@/components/HardwareAuthenticators";
 import SEOHead from "@/components/SEOHead";
+import HeroLeadForm from "@/components/HeroLeadForm";
 
 type Tab = "hardware" | "software";
 type SoftwareTab = "platform" | "mobile";
@@ -32,16 +33,30 @@ const Authentication = () => {
       <SEOHead path="/authentication" />
       {/* Header */}
       <section className="bg-[hsl(213,37%,8%)]">
-        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">Solutions</p>
-          <h1
-            className="mt-4 max-w-2xl text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.08] tracking-tight text-white"
-          >
-            Authentication Solutions for Banks
-          </h1>
-          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
-            From FIDO2 hardware security keys and OTP tokens to mobile soft tokens and Cronto transaction signing — a complete multi-factor authentication portfolio for banks and financial institutions.
-          </p>
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
+            <div>
+              <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-primary">Solutions</p>
+              <h1
+                className="mt-4 max-w-2xl text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.08] tracking-tight text-white"
+              >
+                Authentication Solutions for Banks
+              </h1>
+              <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/55">
+                From FIDO2 hardware security keys and OTP tokens to mobile soft tokens and Cronto transaction signing — a complete multi-factor authentication portfolio for banks and financial institutions.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-white/40">
+                {["FIDO2 L1/L2 Certified", "Hardware & Soft Tokens", "Cronto Visual Signing"].map((item) => (
+                  <span key={item} className="flex items-center gap-1.5">
+                    <Check className="h-4 w-4 text-primary" />
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <HeroLeadForm idSuffix="auth" />
+          </div>
         </div>
       </section>
 

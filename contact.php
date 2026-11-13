@@ -5,14 +5,14 @@ $SUBJECT   = 'New Demo Request - TechFlex x OneSpan';
 $LOG_FILE  = __DIR__ . '/contact_log.txt';
 
 // ─── Secrets ──────────────────────────────────────────────────────────────────
-// SMTP password and the hCaptcha secret live in config.local.php, which is
+// SMTP password and the reCAPTCHA secret live in config.local.php, which is
 // gitignored (see .gitignore: *.local) and NEVER committed. On the server,
 // this file must exist alongside contact.php with real values — see
 // config.local.example.php for the template.
 require __DIR__ . '/config.local.php';
 // Expects config.local.php to define:
 //   define('SMTP_PASS', '...');
-//   define('HCAPTCHA_SECRET', '...');
+//   define('RECAPTCHA_SECRET', '...');
 
 // ─── Anti-spam config ──────────────────────────────────────────────────────────
 $HONEYPOT_FIELD   = 'hp_confirm_9x2';              // must match the field name injected in index.html
@@ -20,7 +20,10 @@ $RATE_LIMIT_FILE  = __DIR__ . '/rate_limit.json';  // per-IP submission timestam
 $RATE_LIMIT_MAX   = 8;                             // max submissions
 $RATE_LIMIT_WINDOW = 15 * 60;                       // per this many seconds (15 min)
 
-$HCAPTCHA_SITEKEY = 'b456e4f8-7150-478e-aa14-ae60ec62cdaa'; // public, sent along for hCaptcha's extra domain check
+// reCAPTCHA v3 returns a score from 0.0 (bot) to 1.0 (human) instead of a
+// puzzle. Submissions scoring below this are treated as bots.
+$RECAPTCHA_MIN_SCORE = 0.5;
+$RECAPTCHA_ACTION    = 'submit'; // must match the action the frontend executes
 
 // ─── SMTP credentials ──────────────────────────────────────────────────────────
 // Host/user are not secret on their own; the password comes from config.local.php.
@@ -79,6 +82,10 @@ if ($honeypotValue !== '') {
         'value'     => substr($honeypotValue, 0, 100),
         'user_agent'=> $_SERVER['HTTP_USER_AGENT'] ?? '',
     ]);
+    if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false) {
+        header('Location: /thank-you/');
+        exit;
+    }
     http_response_code(200);
     echo 'OK';
     exit;
@@ -125,21 +132,20 @@ if (!checkRateLimit($clientIp, $RATE_LIMIT_FILE, $RATE_LIMIT_MAX, $RATE_LIMIT_WI
     exit('Too many submissions — please try again later.');
 }
 
-// ─── hCaptcha verification ──────────────────────────────────────────────────────
-// Calls hCaptcha's siteverify endpoint with the token the frontend generated.
+// ─── reCAPTCHA v3 verification ───────────────────────────────────────────────────
+// Calls Google's siteverify endpoint with the token the frontend generated.
 // Returns the decoded response array, or null if the request itself failed
-// (network/curl issue) — treated as "unknown" rather than "bot" so an
-// hCaptcha-side outage doesn't block every real submission.
-function verifyHCaptcha($token, $secret, $sitekey, $remoteIp) {
+// (network/curl issue) — treated as "unknown" rather than "bot" so a
+// Google-side outage doesn't block every real submission.
+function verifyRecaptcha($token, $secret, $remoteIp) {
     $postFields = http_build_query([
         'secret'   => $secret,
         'response' => $token,
-        'sitekey'  => $sitekey,
         'remoteip' => $remoteIp,
     ]);
 
     if (function_exists('curl_init')) {
-        $ch = curl_init('https://api.hcaptcha.com/siteverify');
+        $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
         curl_setopt_array($ch, [
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $postFields,
@@ -157,7 +163,7 @@ function verifyHCaptcha($token, $secret, $sitekey, $remoteIp) {
                 'timeout' => 5,
             ],
         ]);
-        $raw = @file_get_contents('https://api.hcaptcha.com/siteverify', false, $context);
+        $raw = @file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
     }
 
     if ($raw === false) return null;
@@ -165,44 +171,62 @@ function verifyHCaptcha($token, $secret, $sitekey, $remoteIp) {
     return is_array($decoded) ? $decoded : null;
 }
 
-$hcaptchaToken = trim($_POST['h-captcha-response'] ?? '');
+$recaptchaSecret = defined('RECAPTCHA_SECRET') ? RECAPTCHA_SECRET : '';
+$recaptchaToken  = trim($_POST['g-recaptcha-response'] ?? '');
 
-if ($hcaptchaToken === '') {
-    // No token at all — most likely the widget was never completed (or its
-    // script was blocked). Previously this "failed open" and sent the email
-    // anyway, which let anyone skip the captcha entirely. Now it's rejected
-    // the same way the honeypot is: logged, faked "OK" back to the client,
-    // no email sent. Real users who complete the widget are unaffected.
-    logMsg('WARN', 'hCaptcha token missing — rejected silently (no email sent)', [
+if ($recaptchaSecret === '') {
+    // Secret not yet added to config.local.php on the server. Rather than
+    // drop every real lead, skip the check and say so in the log.
+    logMsg('WARN', 'RECAPTCHA_SECRET not configured — skipping reCAPTCHA check', [
         'ip' => $clientIp,
     ]);
+} elseif ($recaptchaToken === '') {
+    // No token at all — most likely the script was blocked or the request
+    // didn't come from the site's own forms. Rejected the same way the
+    // honeypot is: logged, faked "OK" back to the client, no email sent.
+    logMsg('WARN', 'reCAPTCHA token missing — rejected silently (no email sent)', [
+        'ip' => $clientIp,
+    ]);
+    if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false) {
+        header('Location: /thank-you/');
+        exit;
+    }
     http_response_code(200);
     echo 'OK';
     exit;
-}
-
-$verification = verifyHCaptcha($hcaptchaToken, HCAPTCHA_SECRET, $HCAPTCHA_SITEKEY, $clientIp);
-
-if ($verification === null) {
-    logMsg('WARN', 'hCaptcha verification request failed (network/hCaptcha issue) — proceeding anyway', [
-        'ip' => $clientIp,
-    ]);
 } else {
-    $success = $verification['success'] ?? false;
+    $verification = verifyRecaptcha($recaptchaToken, $recaptchaSecret, $clientIp);
 
-    logMsg('INFO', 'hCaptcha verification result', [
-        'ip'      => $clientIp,
-        'success' => $success,
-        'errors'  => $verification['error-codes'] ?? [],
-    ]);
-
-    if (!$success) {
-        logMsg('WARN', 'hCaptcha verification failed — rejected silently', [
+    if ($verification === null) {
+        logMsg('WARN', 'reCAPTCHA verification request failed (network/Google issue) — proceeding anyway', [
             'ip' => $clientIp,
         ]);
-        http_response_code(200);
-        echo 'OK'; // fake success, same pattern as the honeypot rejection
-        exit;
+    } else {
+        $success = $verification['success'] ?? false;
+        $score   = $verification['score'] ?? 0;
+        $action  = $verification['action'] ?? '';
+
+        logMsg('INFO', 'reCAPTCHA verification result', [
+            'ip'      => $clientIp,
+            'success' => $success,
+            'score'   => $score,
+            'action'  => $action,
+            'errors'  => $verification['error-codes'] ?? [],
+        ]);
+
+        if (!$success || $score < $RECAPTCHA_MIN_SCORE || $action !== $RECAPTCHA_ACTION) {
+            logMsg('WARN', 'reCAPTCHA check failed — rejected silently', [
+                'ip'    => $clientIp,
+                'score' => $score,
+            ]);
+            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false) {
+                header('Location: /thank-you/');
+                exit;
+            }
+            http_response_code(200);
+            echo 'OK'; // fake success, same pattern as the honeypot rejection
+            exit;
+        }
     }
 }
 
@@ -311,6 +335,10 @@ try {
 
 if ($result) {
     logMsg('SUCCESS', 'SMTP mail sent to ' . implode(', ', $TO_LIST));
+    if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false) {
+        header('Location: /thank-you/');
+        exit;
+    }
     http_response_code(200);
     echo 'OK';
 } else {

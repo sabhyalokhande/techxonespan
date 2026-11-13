@@ -1,6 +1,17 @@
 Options -MultiViews
 RewriteEngine On
 
+# ─── Canonical 301 Redirection (Direct to https://secure-digitalbanking.com) ───
+# If www is present, redirect directly to https://secure-digitalbanking.com
+RewriteCond %{HTTP_HOST} ^www\.secure-digitalbanking\.com$ [NC]
+RewriteRule ^(.*)$ https://secure-digitalbanking.com/$1 [R=301,L]
+
+# If HTTP, redirect to HTTPS
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://secure-digitalbanking.com/$1 [R=301,L]
+
+# ─── SPA / React Router Routing ───────────────────────────────────────────────
 # Serve existing files and directories directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

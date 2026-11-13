@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,32 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
-
-// Must match contact.php exactly: $HCAPTCHA_SITEKEY and $HONEYPOT_FIELD.
-const HCAPTCHA_SITEKEY = "b456e4f8-7150-478e-aa14-ae60ec62cdaa";
-const HONEYPOT_FIELD = "hp_confirm_9x2";
-
-declare global {
-  interface Window {
-    hcaptcha?: {
-      render: (container: HTMLElement, opts: Record<string, unknown>) => string;
-      getResponse: (widgetId: string) => string;
-      reset: (widgetId: string) => void;
-    };
-    onHCaptchaApiLoad?: () => void;
-  }
-}
-
-// Keep these values in sync with $PRODUCT_LABELS in contact.php — the value
-// sent here is what the server maps to a human-readable label in the email.
-const PRODUCT_OPTIONS: { value: string; label: string }[] = [
-  { value: "mfa", label: "Multi-Factor Authentication (MFA)" },
-  { value: "hardware-auth", label: "Hardware Authenticators (DIGIPASS FX)" },
-  { value: "software-auth", label: "Software Authenticators" },
-  { value: "mobile-security", label: "Next-Gen Mobile App Shielding" },
-  { value: "fraud-protection", label: "Fraud & Transaction Protection" },
-  { value: "transaction-signing", label: "Transaction Signing" },
-];
+import { HONEYPOT_FIELD, PRODUCT_OPTIONS, loadRecaptcha, submitLead } from "@/lib/lead";
 
 const EMPTY_FORM = {
   firstName: "",
@@ -51,43 +26,8 @@ const Contact = () => {
   const [form, setForm] = useState(EMPTY_FORM);
   const [honeypot, setHoneypot] = useState("");
 
-  const captchaContainerRef = useRef<HTMLDivElement>(null);
-  const widgetIdRef = useRef<string | null>(null);
-
-  // Load hCaptcha's script once and render the widget into our container.
-  // Explicit render (not hCaptcha's auto class-based scan) because the
-  // container always exists in the DOM here (no timing race like the old
-  // hand-patched version had to work around).
   useEffect(() => {
-    function renderWidget() {
-      if (
-        widgetIdRef.current !== null ||
-        !captchaContainerRef.current ||
-        !window.hcaptcha
-      ) {
-        return;
-      }
-      widgetIdRef.current = window.hcaptcha.render(captchaContainerRef.current, {
-        sitekey: HCAPTCHA_SITEKEY,
-        size: "normal",
-      });
-    }
-
-    if (window.hcaptcha) {
-      renderWidget();
-      return;
-    }
-
-    window.onHCaptchaApiLoad = renderWidget;
-
-    if (!document.getElementById("hcaptcha-api-script")) {
-      const script = document.createElement("script");
-      script.id = "hcaptcha-api-script";
-      script.src = "https://js.hcaptcha.com/1/api.js?onload=onHCaptchaApiLoad&render=explicit";
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-    }
+    loadRecaptcha().catch(() => {});
   }, []);
 
   const updateField =
@@ -99,52 +39,14 @@ const Contact = () => {
     e.preventDefault();
     setSubmitting(true);
 
-    const captchaToken =
-      window.hcaptcha && widgetIdRef.current !== null
-        ? window.hcaptcha.getResponse(widgetIdRef.current)
-        : "";
-
-    const body = new FormData();
-    body.append("firstName", form.firstName);
-    body.append("lastName", form.lastName);
-    body.append("email", form.email);
-    body.append("company", form.company);
-    body.append("phone", form.phone);
-    body.append("product", form.product);
-    body.append("message", form.message);
-    body.append("h-captcha-response", captchaToken);
-    // Real users never touch this — it's visually hidden. contact.php
-    // silently discards the submission server-side if it's non-empty.
-    body.append(HONEYPOT_FIELD, honeypot);
-
     try {
-      const res = await fetch("/contact.php", { method: "POST", body });
-      const text = await res.text();
-
-      if (!res.ok) {
-        throw new Error(text || `Request failed (${res.status})`);
-      }
-
-      // Full page load (not client-side routing) so tags that fire on page
-      // view, like a GTM thank-you trigger, see /thank-you. The timeout covers
-      // gtag.js being blocked, when event_callback would never run.
-      const goToThankYou = () => window.location.assign("/thank-you");
-      if (typeof window.gtag === "function") {
-        window.setTimeout(goToThankYou, 1000);
-        window.gtag("event", "conversion", {
-          send_to: "AW-18073309737/vk9uCKXu5ZgcEKmkg6pD",
-          event_callback: goToThankYou,
-        });
-      } else {
-        goToThankYou();
-      }
-    } catch (err) {
+      await submitLead({ ...form, honeypot });
+    } catch {
       toast({
         title: "Something went wrong",
         description: "Please try again in a moment, or email us directly.",
         variant: "destructive",
       });
-    } finally {
       setSubmitting(false);
     }
   };
@@ -286,10 +188,6 @@ const Contact = () => {
                 aria-hidden="true"
                 style={{ display: "none" }}
               />
-
-              {/* hCaptcha widget — contact.php verifies the token server-side
-                  via hCaptcha's siteverify before sending any email. */}
-              <div ref={captchaContainerRef} />
 
               <Button
                 type="submit"
